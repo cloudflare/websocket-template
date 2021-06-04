@@ -47,7 +47,7 @@ const template = `
     })
 
     ws.addEventListener("close", () => {
-      console.log('Closed websocket')
+      console.log('Received close websocket event in browser script')
 
       const list = document.querySelector("#events")
       list.innerText = ""

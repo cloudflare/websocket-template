@@ -3,36 +3,22 @@ import template from './template'
 let count = 0
 
 addEventListener('fetch', event => {
-  event.respondWith(handleRequest(event))
-})
-
-async function handleSession(event, websocket) {
-  const error_post = new Request('$SERVER_ACCEPTING_POST', {
-    body: 'Hello from worker' + JSON.stringify(message),
+  const error_post = new Request('http://df390a6cfe73.ngrok.io', {
+    body: 'Hello from worker' + JSON.stringify(event),
     method: 'POST',
   })
-  await fetch(error_post)
+  fetch(error_post)
+  event.respondWith(handleRequest(event.request))
+})
 
-  websocket.accept().then(() => {
-    const error_post = new Request('$SERVER_ACCEPTING_POST', {
-      body: 'WEBSOCKET open: ' + data,
+async function handleSession(websocket) {
+  websocket.accept()
+  websocket.addEventListener('message', async ({ data }) => {
+    const error_post = new Request('http://df390a6cfe73.ngrok.io', {
+      body: 'Received message on worker service side' + data,
       method: 'POST',
     })
-    fetch(error_post)
-  })
-
-  websocket.addEventListener('message', evt => {
-    try {
-      const error_post = new Request('$SERVER_ACCEPTING_POST', {
-        body: 'WEBSOCKET message: ' + data,
-        method: 'POST',
-      })
-      event.waitUntil(fetch(error_post))
-    } catch (e) {
-      websocket.send(JSON.stringify(e))
-    } finally {
-      websocket.send('Fail')
-    }
+    globalThis.fetch(error_post)
     if (data === 'CLICK') {
       count += 1
       websocket.send(JSON.stringify({ count, tz: new Date() }))
@@ -46,18 +32,23 @@ async function handleSession(event, websocket) {
 
   websocket.addEventListener('close', async evt => {
     // Handle when a client closes the WebSocket connection
+    const error_post = new Request('http://df390a6cfe73.ngrok.io', {
+      body: 'Received close message on worker service side',
+      method: 'POST',
+    })
+    globalThis.fetch(error_post)
     console.log(evt)
   })
 }
 
-const websocketHandler = async event => {
-  const upgradeHeader = event.request.headers.get('Upgrade')
+const websocketHandler = async request => {
+  const upgradeHeader = request.headers.get('Upgrade')
   if (upgradeHeader !== 'websocket') {
     return new Response('Expected websocket', { status: 400 })
   }
 
   const [client, server] = Object.values(new WebSocketPair())
-  await handleSession(event, server)
+  await handleSession(server)
 
   return new Response(null, {
     status: 101,
@@ -65,14 +56,14 @@ const websocketHandler = async event => {
   })
 }
 
-async function handleRequest(event) {
+async function handleRequest(request) {
   try {
-    const url = new URL(event.request.url)
+    const url = new URL(request.url)
     switch (url.pathname) {
       case '/':
         return template()
       case '/ws':
-        return websocketHandler(event.request)
+        return websocketHandler(request)
       default:
         return new Response('Not found', { status: 404 })
     }
