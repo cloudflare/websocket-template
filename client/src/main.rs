@@ -1,7 +1,9 @@
 use futures::stream::StreamExt;
+use futures::SinkExt;
 use structopt::StructOpt;
 use tokio;
 use tokio_util;
+use tokio_tungstenite::{tungstenite::Message, WebSocketStream};
 use url;
 
 #[derive(Debug, StructOpt)]
@@ -37,6 +39,8 @@ async fn main() {
             maybe_outgoing = reader.next() => {
                 if let Some(Ok(msg)) = maybe_outgoing {
                     println!("Echo outgoing message: {}", msg);
+                    let tokio_msg = Message::Text(msg);
+                    socket.send(tokio_msg).await.expect("Failed to send message");
                 }
             },
             _ = tokio::signal::ctrl_c() => {

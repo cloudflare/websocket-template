@@ -12,8 +12,6 @@ const template = `
 <h2> Send a message to the webserver </h2>
 <label for="message">Tell the worker:</label>
   <input type="text" id="message" name="message" onchange="sendMessage(this.value)"><br><br>
-<p>You can also send a message that the WebSocket server doesn't recognize. This will cause the WebSocket server to return an "error" payload back to the client.</p>
-<button id="unknown">Simulate Unknown Message</button>
 
 <p>When you're done clicking, you can close the connection below. Further clicks won't work until you refresh the page.</p>
 <button id="close">Close connection</button>
@@ -38,7 +36,9 @@ const template = `
       updateCount(0)
     })
     ws.onmessage = function(event) {
-    console.log(event)
+      console.log(event)
+      console.log(typeof event)
+      addNewEvent(event.data)
     }
 
     ws.addEventListener("close", () => {
@@ -71,13 +71,15 @@ const template = `
     list.prepend(item)
   }
 
-  const closeConnection = () => ws.close()
   const sendMessage = (data) => {
-  ws.send(data)
+    ws.send(data)
   }
 
-  document.querySelector("#close").addEventListener("click", closeConnection)
-  document.querySelector("#unknown").addEventListener("click", () => ws.send("HUH"))
+  document.querySelector("#close").addEventListener("click", () => {
+    console.log("Emitting close event from browser client");
+    ws.close();
+  })
+  
   const setErrorMessage = message => {
     document.querySelector("#error").innerHTML = message ? message : ""
   }

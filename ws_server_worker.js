@@ -1,20 +1,15 @@
 import template from './template'
-
+let post_to_client = 'http://761ffb706261.ngrok.io'
 let count = 0
 
 addEventListener('fetch', event => {
-  const error_post = new Request('http://df390a6cfe73.ngrok.io', {
-    body: 'Hello from worker' + JSON.stringify(event),
-    method: 'POST',
-  })
-  fetch(error_post)
   event.respondWith(handleRequest(event.request))
 })
 
 async function handleSession(websocket) {
   websocket.accept()
   websocket.addEventListener('message', async ({ data }) => {
-    const error_post = new Request('http://df390a6cfe73.ngrok.io', {
+    const error_post = new Request(post_to_client, {
       body: 'Received message on worker service side' + data,
       method: 'POST',
     })
@@ -33,12 +28,11 @@ async function handleSession(websocket) {
 
   websocket.addEventListener('close', async evt => {
     // Handle when a client closes the WebSocket connection
-    const error_post = new Request('http://df390a6cfe73.ngrok.io', {
+    const error_post = new Request(post_to_client, {
       body: 'Received close message on worker service side',
       method: 'POST',
     })
     globalThis.fetch(error_post)
-    console.log(evt)
   })
 }
 

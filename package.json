@@ -2,8 +2,8 @@
   "private": true,
   "name": "websocket-template",
   "version": "1.0.0",
-  "description": "A template for kick starting a Cloudflare Workers project",
-  "main": "index.js",
+  "description": "A template for kick starting a Cloudflare Workers project, with websocket server and browser + CLI client included",
+  "main": "ws_server_worker.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "prettier --write '**/*.{js,css,json,md}'"
