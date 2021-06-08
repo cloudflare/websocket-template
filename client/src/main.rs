@@ -3,7 +3,7 @@ use futures::SinkExt;
 use structopt::StructOpt;
 use tokio;
 use tokio_util;
-use tokio_tungstenite::{tungstenite::Message, WebSocketStream};
+use tokio_tungstenite::tungstenite::Message;
 use url;
 
 #[derive(Debug, StructOpt)]

@@ -12,6 +12,6 @@ serde = '1.0.125'
 tokio = { version = '1.5.0', features=['full']}
 tokio-tungstenite = { version = '', features=['native-tls']}
 tokio-util = { version = '', features=['codec']}
-tungstenite = '0.13.0'
+tungstenite = '' 
 structopt = ''
 url = '2.2.1'

@@ -26,10 +26,11 @@ async function handleSession(websocket) {
     }
   })
 
-  websocket.addEventListener('close', async evt => {
+    websocket.addEventListener('close', async ({evt}) => {
     // Handle when a client closes the WebSocket connection
+    // with or without closing frame 
     const error_post = new Request(post_to_client, {
-      body: 'Received close message on worker service side',
+	    body: 'Received close message on worker service side: '+ evt,
       method: 'POST',
     })
     await globalThis.fetch(error_post)
