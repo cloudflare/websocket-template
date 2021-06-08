@@ -23,9 +23,10 @@ async function handleSession(websocket) {
       count += 1
       websocket.send(JSON.stringify({ count, tz: new Date() }))
     } else {
-      // An unknown message came into the server. Send back an error message
+
+      // `An unknown message came into the server. Send back an echo message
       websocket.send(
-        JSON.stringify({ error: 'Unknown message received', tz: new Date() }),
+        "Message recieved on websocket server, echo: " + data,
       )
     }
   })
