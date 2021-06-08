@@ -1,0 +1,17 @@
+[package]
+name = "tail-client"
+version = "0.1.0"
+authors = ["Nat <davidson@cloudflare.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+futures = ''
+serde = '1.0.125'
+tokio = { version = '1.5.0', features=['full']}
+tokio-tungstenite = { version = '', features=['native-tls']}
+tokio-util = { version = '', features=['codec']}
+tungstenite = '0.13.0'
+structopt = ''
+url = '2.2.1'
