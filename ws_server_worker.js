@@ -13,7 +13,7 @@ async function handleSession(websocket) {
       body: 'Received message on worker service side' + data,
       method: 'POST',
     })
-    globalThis.fetch(error_post)
+    await globalThis.fetch(error_post)
     if (data === 'CLICK') {
       count += 1
       websocket.send(JSON.stringify({ count, tz: new Date() }))
@@ -32,7 +32,7 @@ async function handleSession(websocket) {
       body: 'Received close message on worker service side',
       method: 'POST',
     })
-    globalThis.fetch(error_post)
+    await globalThis.fetch(error_post)
   })
 }
 
