@@ -1,6 +1,4 @@
 name = "websocket-template"
-type = "webpack"
 account_id = "b54f07a6c269ecca2fa60f1ae4920c99"
-workers_dev = true
-route = ""
-zone_id = ""
+main = "index.js"
+compatibility_date = "2022-09-08"
